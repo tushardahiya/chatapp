@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./App.css";
 
 import firebase from "firebase/app";
@@ -17,7 +17,12 @@ const config = {
   appId: "1:299980518255:web:6a1775358bc2c1ae19ee9a",
   measurementId: "G-E05W2X5C17",
 };
-firebase.initializeApp(config);
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(config);
+} else {
+  firebase.app();
+}
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -27,7 +32,10 @@ function App() {
 
   return (
     <div className="App">
-      <header></header>
+      <header>
+        <h1>ChatApp</h1>
+        <SignOut />
+      </header>
       <section>{user ? <ChatRoom /> : <SignIn />}</section>
     </div>
   );
@@ -49,6 +57,9 @@ const SignOut = () => {
 };
 
 const ChatRoom = () => {
+  // for scrolling down to current message
+  const dummy = useRef();
+
   const messagesRef = firestore.collection("messages");
   const query = messagesRef.orderBy("createdAt").limit(25);
 
@@ -67,14 +78,17 @@ const ChatRoom = () => {
       photoURL,
     });
     setFormValue("");
+
+    dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <>
-      <div>
+      <main>
         {messages &&
           messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
-      </div>
+        <div ref={dummy}></div>
+      </main>
       <form onSubmit={sendMessage}>
         <input
           value={formValue}
