@@ -34,6 +34,8 @@ function App() {
     <div className="App">
       <header>
         <h1>ChatApp</h1>
+        {user && <h3>Welcome {user.displayName}</h3>}
+
         <SignOut />
       </header>
       <section>{user ? <ChatRoom /> : <SignIn />}</section>
