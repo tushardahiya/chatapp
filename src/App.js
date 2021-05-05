@@ -33,8 +33,13 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>ChatApp</h1>
-        {user && <h3>Welcome {user.displayName}</h3>}
+        <h2>ChatApp</h2>
+        {user ? (
+          <div className="user-greeting">
+            <h5>Welcome {user.displayName}</h5>
+            <img className="heading-img" src={auth.currentUser.photoURL} />
+          </div>
+        ) : null}
 
         <SignOut />
       </header>
@@ -49,12 +54,20 @@ const SignIn = () => {
     auth.signInWithPopup(provider);
   };
 
-  return <button onClick={signInWithGoogle}>Sign in with Google</button>;
+  return (
+    <button className="signin-button" onClick={signInWithGoogle}>
+      Sign in with Google
+    </button>
+  );
 };
 
 const SignOut = () => {
   return (
-    auth.currentUser && <button onClick={() => auth.signOut()}>Sign Out</button>
+    auth.currentUser && (
+      <button className="signout-button" onClick={() => auth.signOut()}>
+        Sign Out
+      </button>
+    )
   );
 };
 
