@@ -85,16 +85,17 @@ const ChatRoom = () => {
   const sendMessage = async (e) => {
     e.preventDefault();
     const { uid, photoURL } = auth.currentUser;
+    if (formValue) {
+      await messagesRef.add({
+        text: formValue,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        uid,
+        photoURL,
+      });
+      setFormValue("");
 
-    await messagesRef.add({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL,
-    });
-    setFormValue("");
-
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+      dummy.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
